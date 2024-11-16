@@ -1,30 +1,30 @@
 package main.java;
 
-public class FraudDetector {
+import java.util.ArrayList;
+import java.util.List;
 
-    public boolean isFraud(Transaction transaction) {
-    	Trader trader = transaction.getTrader();
-    	
-    	if (transaction.getAmount() > 1000000) {
-    		return true;
-    	}
-    	
-    	if (trader.getFullName().equals("Pokemon")) {
-			return true;
-		}
-    	
-    	if (trader.getCity().equals("Sydney")) {
-			return true;
-		}
-    	
-    	if (trader.getCountry().equals("Jamaica")) {
-			return true;
-		}
-    	
-    	if (trader.getCountry().equals("Germany") &&  transaction.getAmount() > 1000) {
-			return true;
-		}
-        return false;
+public class FraudDetector {
+	
+	private List<FraudRule> fraudRules = new ArrayList<FraudRule>(List.of(
+			new FraudRule1(),
+			new FraudRule2(),
+			new FraudRule3()
+			));
+
+    public FraudDetectionResult isFraud(Transaction transaction) {
+    	return fraudRules.stream()
+    					 .filter(rule->rule.isFraud(transaction))
+    					 .findFirst()
+    					 .map(this::buildFraudResult)
+    					 .orElse(buildNotFraudResult());
+    }
+    
+    private FraudDetectionResult buildFraudResult(FraudRule rule) {
+    	return new FraudDetectionResult(rule.getRuleName(),true);
+    }
+    
+    private FraudDetectionResult buildNotFraudResult() {
+    	return new FraudDetectionResult(null, false);
     }
 
 }

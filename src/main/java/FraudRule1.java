@@ -7,5 +7,10 @@ public class FraudRule1 implements FraudRule{
 		Trader trader = transaction.getTrader();
 		return transaction.getAmount() > 1000000;
 	}
+
+	@Override
+	public String getRuleName() {
+		return "FraudRule1";
+	}
 	
 }
